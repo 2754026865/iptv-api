@@ -356,49 +356,15 @@ def get_ip_address():
     return f"{host}:{port}"
 
 
-# def convert_to_m3u(first_channel_name=None):
-#     """
-#     Convert result txt to m3u format
-#     """
-#     user_final_file = resource_path(config.final_file)
-#     if os.path.exists(user_final_file):
-#         with open(user_final_file, "r", encoding="utf-8") as file:
-#             m3u_output = '#EXTM3U x-tvg-url="https://ghproxy.cc/https://raw.githubusercontent.com/fanmingming/live/main/e.xml"\n'
-#             current_group = None
-#             for line in file:
-#                 trimmed_line = line.strip()
-#                 if trimmed_line != "":
-#                     if "#genre#" in trimmed_line:
-#                         current_group = trimmed_line.replace(",#genre#", "").strip()
-#                     else:
-#                         try:
-#                             original_channel_name, _, channel_link = map(
-#                                 str.strip, trimmed_line.partition(",")
-#                             )
-#                         except:
-#                             continue
-#                         processed_channel_name = re.sub(
-#                             r"(CCTV|CETV)-(\d+)(\+.*)?",
-#                             lambda m: f"{m.group(1)}{m.group(2)}"
-#                                       + ("+" if m.group(3) else ""),
-#                             first_channel_name if current_group == "🕘️更新时间" else original_channel_name,
-#                         )
-#                         m3u_output += f'#EXTINF:-1 tvg-name="{processed_channel_name}" tvg-logo="https://ghproxy.cc/https://raw.githubusercontent.com/fanmingming/live/main/tv/{processed_channel_name}.png"'
-#                         if current_group:
-#                             m3u_output += f' group-title="{current_group}"'
-#                         m3u_output += f",{original_channel_name}\n{channel_link}\n"
-#             m3u_file_path = os.path.splitext(user_final_file)[0] + ".m3u"
-#             with open(m3u_file_path, "w", encoding="utf-8") as m3u_file:
-#                 m3u_file.write(m3u_output)
-#             print(f"✅ M3U result file generated at: {m3u_file_path}")
-def convert_to_m3u(first_channel_name=None):
+def convert_to_m3u(path=None, first_channel_name=None):
     """
     将 txt 格式转换为增强版 m3u 格式,包含 EPG、分组和台标
     参数:
+    path: 指定输入文件路径，为空时使用配置中的final_file
     first_channel_name: 指定第一个频道名称
     """
     # 获取输入和输出文件路径
-    final_file = config.final_file
+    final_file = path if path else config.final_file
     m3u_file_path = os.path.splitext(final_file)[0] + ".m3u"
     
     # 读取频道列表
